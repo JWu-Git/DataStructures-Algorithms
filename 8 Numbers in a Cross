@@ -1,0 +1,74 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+bool ok(int arr[], int c, int arr2[][5]);
+void print(int arr[], int& counter);
+void backtrack(int arr[], int& c);
+void reset(int arr[], int& c);
+
+int main() {
+
+    int board[8]={1}, col = 0, counter=0;
+    int helper[8][5]={{-1},{0,-1},{0,-1},{0,1,2,-1},{0,1,3,-1},{1,4,-1},{2,3,4,-1},{3,4,5,6,-1}};
+
+    //if col -1, we backtracked too far
+    while(col>-1){
+
+        //if col 8, we have a solution, print + backtrack
+        if(col==8){
+            print(board, counter);
+            backtrack(board, col);
+        }
+         
+        //if number 9, thats invalid. need to reset and backtrack
+        else if(board[col]==9){
+            reset(board, col);
+            backtrack(board, col);
+        }
+
+        //if current number ok, go to next column
+        else if (ok(board, col, helper)){
+            col++;
+        }
+       //otherwise, increment number
+        else{
+            board[col]++;
+        }
+ 
+    }
+ 
+    return 0;
+}
+
+    
+bool ok(int arr[], int c, int arr2[][5]){
+    //same number test
+    for (int i=0; i<c;i++) if ((arr[i]==arr[c])) return 0;
+    for (int i=0; i<5;i++){
+        //if sentinel value, return true
+        if (arr2[c][i]==-1) return 1;
+        //if consecutive number in adjacent cell, return false;
+        if (abs(arr[c]-arr[arr2[c][i]])==1) return 0;   
+    }
+    //otherwise, return true
+    return 1;
+}
+
+void print(int arr[],int& counter){
+    counter++;
+    cout<<endl<<"SOLUTION NUMBER: " << counter <<endl;
+    cout<<" "<<arr[0]<<arr[1]<<endl<<arr[2]<<arr[3]<<arr[4]<<arr[5]<<endl<<" "<<arr[6]<<arr[7]<<endl;
+
+}
+
+void backtrack(int arr[], int& c){
+   //go back a column and increment number by 1
+    c--;
+    arr[c]++;
+}
+
+void reset(int arr[], int& c){
+    //change number to 1
+    arr[c]=1;
+}
