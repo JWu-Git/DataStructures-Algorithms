@@ -1,0 +1,74 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+bool ok(int arr[], int c);
+void print(int arr[], int& counter);
+void backtrack(int arr[], int& c);
+void reset(int arr[], int& c);
+
+int main() {
+    //initialize board, column, and counter
+    int board[8]={0}, col = 0, counter=0;
+ 
+    //keep doing things inside while until we backtrack to col -1
+    while(col>-1){
+
+       //if we go beyond column 8, we have a solution. print and backtrack.
+        if(col==8){
+            print(board, counter);
+            backtrack(board, col);
+        }
+         
+         //if row goes to 8, reset row to 0 and backtrack
+        else if(board[col]==8){
+            reset(board, col);
+            backtrack(board, col);
+        }
+
+         //if if queen in current row ok, go to next col
+        else if(ok(board, col)){
+            col++;
+        }
+       
+       //otherwise, increment row by 1
+        else{
+            board[col]++;
+        }
+ 
+    }
+ 
+    return 0;
+}
+
+    
+bool ok(int arr[], int c){
+    //hor and diag tests combined
+    for (int i=0; i<c;i++) if ((arr[i]==arr[c] or (c-i==abs(arr[c]-arr[i])))) return 0;
+    return 1;
+}
+
+void print(int arr[],int& counter){
+    counter++;
+    cout<<"SOLUTION NUMBER: " << counter <<endl;
+    for (int r=0; r<8;r++) {
+        for (int c=0;c<8;c++){
+            if (arr[c]==r) cout<<1;
+            else cout<<0;
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+
+}
+
+void backtrack(int arr[], int& c){
+    //go back a column and go to next row in the new column
+    c--;
+    arr[c]++;
+}
+
+void reset(int arr[], int& c){
+    //make queen in current col go back to row 0
+    arr[c]=0;
+}
